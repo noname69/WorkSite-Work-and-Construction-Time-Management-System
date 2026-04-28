@@ -241,7 +241,7 @@ Užtikrinti, kad sistema veikia teisingai ir atitinka gerą architektūrą.
 
 ## 🔧 Galimi patobulinimai ateityje
 
-- JWT autentifikacija (vietoj basic auth)  
+- JWT autentifikacija  
 - REST API dokumentacija (Swagger)  
 - React frontend  
 - PDF/Excel ataskaitų eksportas  
