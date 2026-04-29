@@ -21,13 +21,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<UserResponse> getAll() {
         return userService.getAll();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public UserResponse getById(@PathVariable Long id) {
         return userService.getById(id);
@@ -43,7 +43,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER)")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
     @PutMapping("/{id}")
     public UserResponse update(
             @PathVariable long id,

@@ -3,6 +3,7 @@ package online.nonamelab.WorkSite.controller;
 import jakarta.validation.Valid;
 import online.nonamelab.WorkSite.dto.CreateSiteRequest;
 import online.nonamelab.WorkSite.dto.SiteResponse;
+import online.nonamelab.WorkSite.dto.UpdateSiteRequest;
 import online.nonamelab.WorkSite.dto.UserResponse;
 import online.nonamelab.WorkSite.service.ConstructionSiteService;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +21,19 @@ public class ConstructionSiteController {
         this.constructionSiteService = constructionSiteService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @GetMapping
     public List<SiteResponse> getAll() {
         return constructionSiteService.getAll();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @GetMapping("/{id}")
     public SiteResponse getById(@PathVariable Long id) {
         return constructionSiteService.getById(id);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @PostMapping
     public ResponseEntity<SiteResponse> create(
             @RequestBody @Valid CreateSiteRequest request
@@ -37,6 +41,25 @@ public class ConstructionSiteController {
         SiteResponse response = constructionSiteService.create(request);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PutMapping("/{id}")
+    public ResponseEntity<SiteResponse> update(
+            @PathVariable Long id,
+            @RequestBody @Valid UpdateSiteRequest request
+            ) {
+
+        SiteResponse response = constructionSiteService.update(id, request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        constructionSiteService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")

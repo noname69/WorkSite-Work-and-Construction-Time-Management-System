@@ -1,6 +1,7 @@
 package online.nonamelab.WorkSite.config;
 
 import online.nonamelab.WorkSite.security.CustomAccessDeniedHandler;
+import online.nonamelab.WorkSite.security.CustomAuthenticationEntryPoint;
 import online.nonamelab.WorkSite.security.JwtAuthenticationFilter;
 import online.nonamelab.WorkSite.security.JwtService;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +23,16 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtFilter, CustomAccessDeniedHandler customAccessDeniedHandler) {
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtFilter,
+            CustomAccessDeniedHandler customAccessDeniedHandler,
+            CustomAuthenticationEntryPoint authenticationEntryPoint) {
         this.jwtFilter = jwtFilter;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -39,6 +46,7 @@ public class SecurityConfig {
                 // VERY IMPORTANT for H2 console (iframe)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()

@@ -5,6 +5,7 @@ import online.nonamelab.WorkSite.dto.SiteMapper;
 import online.nonamelab.WorkSite.dto.SiteResponse;
 import online.nonamelab.WorkSite.dto.UpdateSiteRequest;
 import online.nonamelab.WorkSite.exception.SiteNotFoundException;
+import online.nonamelab.WorkSite.exception.UserNotFoundException;
 import online.nonamelab.WorkSite.model.ConstructionSite;
 import online.nonamelab.WorkSite.model.Role;
 import online.nonamelab.WorkSite.model.User;
@@ -54,12 +55,37 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
 
     @Override
     public SiteResponse update(Long id, UpdateSiteRequest request) {
-        return null;
+        ConstructionSite site = constructionSiteRepository.findById(id)
+                .orElseThrow(() -> new SiteNotFoundException(id));
+
+        User manager = null;
+
+        if(request.managerId() != null) {
+            manager = userRepository.findById(request.managerId())
+                    .orElseThrow(() -> new UserNotFoundException(request.managerId()));
+        }
+
+        if (manager != null && manager.getRole() != Role.MANAGER) {
+            throw new RuntimeException("Only MANAGER can be assigned as manager");
+        }
+
+        site.setName(request.name());
+        site.setDescription(request.description());
+        site.setStatus(request.status());
+        site.setPriority(request.priority());
+        site.setStartDate(request.startDate());
+        site.setEndDate(request.endDate());
+        site.setManager(manager);
+
+        return SiteMapper.toResponse(constructionSiteRepository.save(site));
     }
 
     @Override
     public void delete(Long id) {
+        ConstructionSite site = constructionSiteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Site not found: " + id));
 
+        constructionSiteRepository.delete(site);
     }
 
     @Override
