@@ -4,8 +4,9 @@ import online.nonamelab.WorkSite.dto.CreateSiteRequest;
 import online.nonamelab.WorkSite.dto.SiteMapper;
 import online.nonamelab.WorkSite.dto.SiteResponse;
 import online.nonamelab.WorkSite.dto.UpdateSiteRequest;
+import online.nonamelab.WorkSite.exception.user.InvalidRoleException;
 import online.nonamelab.WorkSite.exception.SiteNotFoundException;
-import online.nonamelab.WorkSite.exception.UserNotFoundException;
+import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
 import online.nonamelab.WorkSite.model.ConstructionSite;
 import online.nonamelab.WorkSite.model.Role;
 import online.nonamelab.WorkSite.model.User;
@@ -45,7 +46,7 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
                 .orElseThrow(() -> new RuntimeException("Manager not found"));
 
         if(manager.getRole() != Role.MANAGER && manager.getRole() != Role.ADMIN) {
-            throw new RuntimeException("Only MANAGER or ADMIN can be assigned as manager");
+            throw new InvalidRoleException("Only MANAGER or ADMIN can be assigned as manager");
         }
 
         ConstructionSite site = SiteMapper.toSite(request, manager);

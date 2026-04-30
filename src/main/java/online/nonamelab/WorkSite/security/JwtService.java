@@ -22,7 +22,8 @@ public class JwtService {
     public String generateToken(User user) {
 
         return Jwts.builder()
-                .setSubject(user.getEmail())
+//                .setSubject(user.getEmail())
+                .setSubject(String.valueOf(user.getId()))
                 .claim("role", user.getRole().name()) //???????
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
@@ -38,9 +39,15 @@ public class JwtService {
         return parse(token).getBody().get("role", String.class);
     }
 
-    public boolean isValid(String token, UserDetails userDetails) {
-        String username = extractEmail(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public String extractSubject(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    public boolean isValid(String token, UserPrincipal userPrincipal) {
+        String userId = extractSubject(token);
+//        System.out.println("user id: " + userId);
+//        System.out.println("userPrincipal id: " + userPrincipal.getId());
+        return userId.equals(userPrincipal.getId().toString()) && !isTokenExpired(token);
 
     }
 
@@ -54,5 +61,13 @@ public class JwtService {
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
