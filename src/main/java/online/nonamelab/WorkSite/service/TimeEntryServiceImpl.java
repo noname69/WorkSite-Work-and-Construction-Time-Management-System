@@ -5,7 +5,7 @@ import online.nonamelab.WorkSite.dto.TimeEntryMapper;
 import online.nonamelab.WorkSite.dto.TimeEntryResponse;
 import online.nonamelab.WorkSite.dto.UpdateTimeEntryRequest;
 import online.nonamelab.WorkSite.exception.BusinessException;
-import online.nonamelab.WorkSite.exception.SiteNotFoundException;
+import online.nonamelab.WorkSite.exception.site.SiteNotFoundException;
 import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
 import online.nonamelab.WorkSite.model.ConstructionSite;
 import online.nonamelab.WorkSite.model.Role;

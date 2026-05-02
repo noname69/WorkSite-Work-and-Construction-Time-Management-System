@@ -21,13 +21,13 @@ public class ConstructionSiteController {
         this.constructionSiteService = constructionSiteService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
     @GetMapping
     public List<SiteResponse> getAll() {
         return constructionSiteService.getAll();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
     @GetMapping("/{id}")
     public SiteResponse getById(@PathVariable Long id) {
         return constructionSiteService.getById(id);

@@ -5,7 +5,7 @@ import online.nonamelab.WorkSite.dto.SiteMapper;
 import online.nonamelab.WorkSite.dto.SiteResponse;
 import online.nonamelab.WorkSite.dto.UpdateSiteRequest;
 import online.nonamelab.WorkSite.exception.user.InvalidRoleException;
-import online.nonamelab.WorkSite.exception.SiteNotFoundException;
+import online.nonamelab.WorkSite.exception.site.SiteNotFoundException;
 import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
 import online.nonamelab.WorkSite.model.ConstructionSite;
 import online.nonamelab.WorkSite.model.Role;

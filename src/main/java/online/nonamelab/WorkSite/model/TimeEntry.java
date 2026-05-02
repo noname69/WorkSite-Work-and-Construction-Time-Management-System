@@ -3,6 +3,9 @@ package online.nonamelab.WorkSite.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "")
@@ -14,30 +17,32 @@ public class TimeEntry
 
     private LocalDate date;
 
-    private double hours;
+//    private double hours;
 
-    private double distance;
+//    private double distance;
 
     @Enumerated(EnumType.STRING)
     private TimeEntryStatus status;
 
     private boolean locked = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "site_id")
-    private ConstructionSite site;
+    @OneToMany(mappedBy = "timeEntry", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TimeEntryProject> projects = new ArrayList<>();
+
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public LocalDate getDate() {
         return date;
@@ -47,21 +52,21 @@ public class TimeEntry
         this.date = date;
     }
 
-    public double getHours() {
-        return hours;
-    }
+//    public double getHours() {
+//        return hours;
+//    }
+//
+//    public void setHours(double hours) {
+//        this.hours = hours;
+//    }
 
-    public void setHours(double hours) {
-        this.hours = hours;
-    }
-
-    public double getDistance() {
-        return distance;
-    }
-
-    public void setDistance(double distance) {
-        this.distance = distance;
-    }
+//    public double getDistance() {
+//        return distance;
+//    }
+//
+//    public void setDistance(double distance) {
+//        this.distance = distance;
+//    }
 
     public TimeEntryStatus getStatus() {
         return status;
@@ -87,11 +92,27 @@ public class TimeEntry
         this.user = user;
     }
 
-    public ConstructionSite getSite() {
-        return site;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setSite(ConstructionSite site) {
-        this.site = site;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
+
+    public List<TimeEntryProject> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<TimeEntryProject> projects) {
+        this.projects = projects;
+    }
+
+//    public ConstructionSite getSite() {
+//        return site;
+//    }
+//
+//    public void setSite(ConstructionSite site) {
+//        this.site = site;
+//    }
 }
