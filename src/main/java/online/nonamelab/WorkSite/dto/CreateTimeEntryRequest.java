@@ -7,19 +7,25 @@ import online.nonamelab.WorkSite.model.TimeEntryStatus;
 import java.time.LocalDate;
 
 public record CreateTimeEntryRequest(
-        @NotNull
+//        @NotNull
+//        LocalDate date,
+//
+//        @Min(0)
+//        double hours,
+//
+//        @Min(0)
+//        double distance,
+//
+//        @NotNull
+//        TimeEntryStatus status,
+//
+//        @NotNull
+//        Long siteId
+
         LocalDate date,
 
-        @Min(0)
-        double hours,
-
-        @Min(0)
-        double distance,
-
-        @NotNull
         TimeEntryStatus status,
 
-        @NotNull
-        Long siteId
+        CreateTimeEntryProjectRequest project
 ) {
 }

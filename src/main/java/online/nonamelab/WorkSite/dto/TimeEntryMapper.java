@@ -10,8 +10,8 @@ public class TimeEntryMapper {
         TimeEntry entry = new TimeEntry();
 
         entry.setDate(request.date());
-        entry.setHours(request.hours());
-        entry.setDistance(request.distance());
+//        entry.setHours(request.hours());
+//        entry.setDistance(request.distance());
         entry.setStatus(request.status());
 
         return entry;
@@ -21,12 +21,15 @@ public class TimeEntryMapper {
         return new TimeEntryResponse(
                 entry.getId(),
                 entry.getDate(),
-                entry.getHours(),
-                entry.getDistance(),
+//                entry.getHours(),
+//                entry.getDistance(),
                 entry.getStatus(),
                 entry.isLocked(),
                 entry.getUser().getId(),
-                entry.getSite().getId()
+//                entry.getSite().getId()
+                entry.getProjects().stream()
+                        .map(TimeEntryProjectMapper::toResponse)
+                        .toList()
         );
     }
 

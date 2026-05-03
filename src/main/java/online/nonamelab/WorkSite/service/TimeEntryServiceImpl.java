@@ -1,137 +1,120 @@
 package online.nonamelab.WorkSite.service;
 
+import online.nonamelab.WorkSite.dto.CreateTimeEntryProjectRequest;
 import online.nonamelab.WorkSite.dto.CreateTimeEntryRequest;
 import online.nonamelab.WorkSite.dto.TimeEntryMapper;
 import online.nonamelab.WorkSite.dto.TimeEntryResponse;
-import online.nonamelab.WorkSite.dto.UpdateTimeEntryRequest;
 import online.nonamelab.WorkSite.exception.BusinessException;
 import online.nonamelab.WorkSite.exception.site.SiteNotFoundException;
-import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
 import online.nonamelab.WorkSite.model.ConstructionSite;
-import online.nonamelab.WorkSite.model.Role;
 import online.nonamelab.WorkSite.model.TimeEntry;
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.model.TimeEntryProject;
+import online.nonamelab.WorkSite.model.TimeEntryStatus;
 import online.nonamelab.WorkSite.repository.ConstructionSiteRepository;
+import online.nonamelab.WorkSite.repository.TimeEntryProjectRepository;
 import online.nonamelab.WorkSite.repository.TimeEntryRepository;
 import online.nonamelab.WorkSite.repository.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
+import online.nonamelab.WorkSite.security.SecurityUtils;
+import online.nonamelab.WorkSite.security.UserPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TimeEntryServiceImpl implements TimeEntryService {
-
-    private final TimeEntryRepository timeEntryRepository;
-    private final ConstructionSiteRepository siteRepository;
     private final UserRepository userRepository;
+    private final ConstructionSiteRepository constructionSiteRepository;
+    private final TimeEntryRepository timeEntryRepository;
+    private final TimeEntryProjectRepository timeEntryProjectRepository;
+    private final PasswordEncoder encoder;
+    private final SecurityUtils securityUtils;
 
-    public TimeEntryServiceImpl(TimeEntryRepository repository, ConstructionSiteRepository siteRepository, UserRepository userRepository) {
-        this.timeEntryRepository = repository;
-        this.siteRepository = siteRepository;
+
+    public TimeEntryServiceImpl(UserRepository userRepository, ConstructionSiteRepository constructionSiteRepository,
+                                TimeEntryRepository timeEntryRepository, TimeEntryProjectRepository timeEntryProjectRepository,
+                                PasswordEncoder encoder,
+                                SecurityUtils securityUtils) {
         this.userRepository = userRepository;
+        this.constructionSiteRepository = constructionSiteRepository;
+        this.timeEntryRepository = timeEntryRepository;
+        this.timeEntryProjectRepository = timeEntryProjectRepository;
+        this.encoder = encoder;
+        this.securityUtils = securityUtils;
     }
 
-//    @Override
-//    public List<TimeEntryResponse> getAll() {
-//        return List.of();
-//    }
 
     @Override
-    public List<TimeEntryResponse> getAll(Long userId, int year, int month) {
-        User currentUser = getCurrentUser();
+    public TimeEntryResponse createOrGet(CreateTimeEntryRequest request) {
+        UserPrincipal current = securityUtils.getCurrentUser();
 
-        Long targetUserId;
+        Optional<TimeEntry> existingEntry =
+                timeEntryRepository.findByUser_IdAndDate(current.getId(), request.date());
 
-        if (currentUser.getRole() == Role.WORKER) {
-            targetUserId = currentUser.getId();
+        TimeEntry entry;
+
+        if (existingEntry.isPresent()) {
+            entry = existingEntry.get();
+
+            // ❗ check if already has project (your rule)
+            boolean hasProject =
+                    timeEntryProjectRepository.existsByTimeEntry_Id(entry.getId());
+
+            if (hasProject) {
+                throw new BusinessException("Time entry already has a project for this day");
+            }
+
+        } else {
+            // 2. create new TimeEntry
+            entry = new TimeEntry();
+            entry.setDate(request.date());
+            entry.setStatus(
+                    request.status() != null ? request.status() : TimeEntryStatus.WORKING
+            );
+            entry.setUser(userRepository.getReferenceById(current.getId()));
+            entry.setCreatedAt(LocalDateTime.now());
+            entry.setLocked(false);
+
+            entry = timeEntryRepository.save(entry);
         }
-        else if (currentUser.getRole() == Role.MANAGER) {
-            targetUserId = (userId != null) ? userId : currentUser.getId();
-        }
-        else {
-            targetUserId = (userId != null) ? userId : currentUser.getId();
-        }
 
-        LocalDate start = startOfMonth(year, month);
-        LocalDate end = endOfMonth(year, month);
+        // 3. create project
+        CreateTimeEntryProjectRequest projectRequest = request.project();
 
-        List<TimeEntry> entries = timeEntryRepository
-                .findByUserIdAndDateBetween(targetUserId, start, end);
+        ConstructionSite site = constructionSiteRepository.findById(
+                projectRequest.constructionSiteId()
+        ).orElseThrow(() -> new SiteNotFoundException(projectRequest.constructionSiteId()));
 
-        return entries.stream()
-                .map(TimeEntryMapper::toResponse)
-                .toList();
+        TimeEntryProject project = new TimeEntryProject();
+        project.setTimeEntry(entry);
+        project.setConstructionSite(site);
+        project.setHours(projectRequest.hours());
+        project.setDistance(projectRequest.distance());
+
+        timeEntryProjectRepository.save(project);
+
+        // 4. attach project to entry (optional but clean)
+        entry.getProjects().add(project);
+
+        // 5. return full response
+        return TimeEntryMapper.toResponse(entry);
     }
 
     @Override
-    public TimeEntryResponse getById(Long id) {
+    public List<TimeEntryResponse> getMyEntries() {
+        return List.of();
+    }
+
+    @Override
+    public TimeEntryResponse getByDate(LocalDate date) {
         return null;
     }
 
     @Override
-    public TimeEntryResponse create(CreateTimeEntryRequest request) {
-        User user = getCurrentUser();
-
-        if (user.getRole() == Role.ADMIN) {
-            throw new BusinessException("ADMIN cannot create time entries");
-        }
-
-        ConstructionSite site = siteRepository.findById(request.siteId())
-                .orElseThrow(() -> new SiteNotFoundException(request.siteId()));
-
-        if (request.hours() <= 0 || request.hours() > 24) {
-            throw new BusinessException("Invalid hours");
-        }
-
-        double existingHours = timeEntryRepository
-                .findByUserIdAndDate(user.getId(), request.date())
-                .stream()
-                .mapToDouble(TimeEntry::getHours)
-                .sum();
-
-        double totalHours = existingHours + request.hours();
-
-        if (totalHours > 24) {
-            throw new BusinessException("Total hours per day cannot exceed 24");
-        }
-
-        TimeEntry entry = TimeEntryMapper.toTimeEntry(request);
-//        entry.setDate(request.date());
-//        entry.setHours(request.hours());
-
-        entry.setUser(user);
-        entry.setSite(site);
-
-        return TimeEntryMapper.toResponse(timeEntryRepository.save(entry));
-    }
-
-    @Override
-    public TimeEntryResponse update(Long id, UpdateTimeEntryRequest request) {
-        return null;
-    }
-
-    @Override
-    public void delete(Long id) {
-
-    }
-
-    private User getCurrentUser() {
-        String email = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email));
-    }
-
-    private LocalDate startOfMonth(int year, int month) {
-        return LocalDate.of(year, month, 1);
-    }
-
-    private LocalDate endOfMonth(int year, int month) {
-        return LocalDate.of(year, month, YearMonth.of(year, month).lengthOfMonth());
+    public List<TimeEntryResponse> getAll() {
+        return List.of();
     }
 }

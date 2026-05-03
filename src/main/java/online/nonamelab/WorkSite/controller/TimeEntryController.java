@@ -1,14 +1,16 @@
 package online.nonamelab.WorkSite.controller;
 
-import jakarta.validation.Valid;
 import online.nonamelab.WorkSite.dto.CreateTimeEntryRequest;
 import online.nonamelab.WorkSite.dto.TimeEntryResponse;
 import online.nonamelab.WorkSite.service.TimeEntryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
+@PreAuthorize("hasAnyRole('WORKER','MANAGER')")
 @RestController
 @RequestMapping("/api/time-entries")
 public class TimeEntryController {
@@ -19,21 +21,14 @@ public class TimeEntryController {
         this.timeEntryService = timeEntryService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'WORKER')")
-    @GetMapping
-    public List<TimeEntryResponse> getAll(
-            @RequestParam(required = false) Long userId,
-            @RequestParam int year,
-            @RequestParam int month
-    ) {
-        return timeEntryService.getAll(userId, year, month);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'WORKER')")
     @PostMapping
-    public TimeEntryResponse create(@RequestBody @Valid CreateTimeEntryRequest request) {
-        return timeEntryService.create(request);
+    public ResponseEntity<TimeEntryResponse> createOrGet(
+            @RequestBody CreateTimeEntryRequest request
+            ) {
+
+        TimeEntryResponse response = timeEntryService.createOrGet(request);
+
+
+        return ResponseEntity.ok(response);
     }
-
-
 }
