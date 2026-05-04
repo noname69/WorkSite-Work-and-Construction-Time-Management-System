@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import online.nonamelab.WorkSite.exception.site.SiteNotFoundException;
 import online.nonamelab.WorkSite.exception.user.DuplicateEmailException;
 import online.nonamelab.WorkSite.exception.user.InvalidRoleException;
+import online.nonamelab.WorkSite.exception.user.ManagerNotFoundException;
 import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +21,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(UserNotFoundException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiError(
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        ex.getMessage(),
+                        request.getRequestURI(),
+                        LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(ManagerNotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(ManagerNotFoundException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ApiError(
                         HttpStatus.NOT_FOUND.value(),
@@ -105,6 +119,38 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 "Validation failed",
+                request.getRequestURI(),
+                LocalDateTime.now(),
+                errors
+        );
+
+        return ResponseEntity.badRequest().body(apiError);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ValidationError> handleJsonParseException(
+            HttpMessageNotReadableException ex,
+            HttpServletRequest request) {
+
+        Throwable rootCause = ex.getMostSpecificCause();
+
+        String message = "Invalid request body";
+
+        if (rootCause != null) {
+            message = rootCause.getMessage();
+        }
+
+        List<ApiFieldError> errors = List.of(
+                new ApiFieldError(
+                        "body",
+                        message
+                )
+        );
+
+        ValidationError apiError = new ValidationError(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Request parsing failed",
                 request.getRequestURI(),
                 LocalDateTime.now(),
                 errors
