@@ -3,7 +3,7 @@ package online.nonamelab.WorkSite.auth;
 
 import online.nonamelab.WorkSite.model.Role;
 import online.nonamelab.WorkSite.model.User;
-import online.nonamelab.WorkSite.repository.UserRepository;
+import online.nonamelab.WorkSite.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

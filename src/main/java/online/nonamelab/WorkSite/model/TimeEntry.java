@@ -33,7 +33,7 @@ public class TimeEntry
     private User user;
 
     @OneToMany(mappedBy = "timeEntry", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TimeEntryProject> projects = new ArrayList<>();
+    private List<TimeEntrySite> projects = new ArrayList<>();
 
 
     public Long getId() {
@@ -100,11 +100,11 @@ public class TimeEntry
         this.createdAt = createdAt;
     }
 
-    public List<TimeEntryProject> getProjects() {
+    public List<TimeEntrySite> getProjects() {
         return projects;
     }
 
-    public void setProjects(List<TimeEntryProject> projects) {
+    public void setProjects(List<TimeEntrySite> projects) {
         this.projects = projects;
     }
 
