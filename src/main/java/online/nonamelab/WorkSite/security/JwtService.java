@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import online.nonamelab.WorkSite.model.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,58 +15,51 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-    private static final String SECRET = "my-super-secret-key-my-super-secret-key"; // >= 32 chars
+    @Value("${jwt.secret}")
+    private String secret;
+
     private static final long EXPIRATION = 1000 * 60 * 60 * 24; // 24h
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateToken(User user) {
 
         return Jwts.builder()
-//                .setSubject(user.getEmail())
                 .setSubject(String.valueOf(user.getId()))
-                .claim("role", user.getRole().name()) //???????
+                .claim("role", user.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String extractEmail(String token) {
-        return parse(token).getBody().getSubject();
+        return getClaims(token).getSubject();
     }
 
     public String extractRole(String token) {
-        return parse(token).getBody().get("role", String.class);
+        return getClaims(token).get("role", String.class);
     }
 
     public String extractSubject(String token) {
-        return extractAllClaims(token).getSubject();
+        return getClaims(token).getSubject();
     }
 
     public boolean isValid(String token, UserPrincipal userPrincipal) {
         String userId = extractSubject(token);
-//        System.out.println("user id: " + userId);
-//        System.out.println("userPrincipal id: " + userPrincipal.getId());
         return userId.equals(userPrincipal.getId().toString()) && !isTokenExpired(token);
 
     }
 
     private boolean isTokenExpired(String token) {
-        return parse(token).getBody().getExpiration().before(new Date());
+        return getClaims(token).getExpiration().before(new Date());
     }
 
-
-    private Jws<Claims> parse(String token) {
+    private Claims getClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token);
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

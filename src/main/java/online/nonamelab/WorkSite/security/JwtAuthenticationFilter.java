@@ -32,10 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
+
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -44,37 +45,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
-//        String email;
-//
-//        try {
-//            email = jwtService.extractEmail(token);
-//        } catch (Exception e) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
 
-        Long userId;
+        long userId;
 
         try {
-            userId = Long.valueOf(jwtService.extractSubject(token));
+            userId = Long.parseLong(jwtService.extractSubject(token));
         } catch (Exception e) {
             filterChain.doFilter(request, response);
             return;
         }
-
-//        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-//            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-//
-//            if(jwtService.isValid(token, userDetails)) {
-//                var authToken = new UsernamePasswordAuthenticationToken(
-//                        userDetails, null, userDetails.getAuthorities()
-//                );
-//
-//                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//
-//                SecurityContextHolder.getContext().setAuthentication(authToken);
-//            }
-//        }
 
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -82,9 +61,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             UserPrincipal userPrincipal = new UserPrincipal(user);
-
-//            System.out.println("SUBJECT: " + jwtService.extractSubject(token));
-//            System.out.println("VALID: " + jwtService.isValid(token, userPrincipal));
 
             if (jwtService.isValid(token, userPrincipal)) {
 

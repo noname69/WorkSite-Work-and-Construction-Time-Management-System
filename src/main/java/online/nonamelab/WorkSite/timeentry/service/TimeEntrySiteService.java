@@ -1,4 +1,4 @@
-package online.nonamelab.WorkSite.service;
+package online.nonamelab.WorkSite.timeentry.service;
 
 import online.nonamelab.WorkSite.timeentry.dto.CreateTimeEntrySiteRequest;
 import online.nonamelab.WorkSite.timeentry.dto.TimeEntrySiteResponse;

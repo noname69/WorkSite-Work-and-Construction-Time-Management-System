@@ -81,11 +81,6 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.toUser(request);
         user.setPassword(encoder.encode(request.password()));
 
-        // enforce business rule
-//        if (request.role() == Role.ADMIN) {
-//            throw new RuntimeException("Only super admin can assign ADMIN role");
-//        }
-
         return UserMapper.toResponse(userRepository.save(user));
     }
 
@@ -96,7 +91,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new UserNotFoundException(currentUser.getId()));
 
-        // optional: email uniqueness
         if (userRepository.existsByEmailAndIdNot(request.email(), user.getId())) {
             throw new DuplicateEmailException(request.email());
         }

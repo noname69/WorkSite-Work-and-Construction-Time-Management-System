@@ -37,6 +37,12 @@ public interface TimeEntryRepository extends JpaRepository<TimeEntry, Long> {
     // manager/admin: all entries for a day
     List<TimeEntry> findByDate(LocalDate date);
 
+    List<TimeEntry> findAllByUser_IdOrderByDateDesc(Long userId);
 
+    List<TimeEntry> findAllByUser_IdAndDateBetweenOrderByDateDesc(
+            Long userId,
+            LocalDate start,
+            LocalDate end
+    );
 
 }

@@ -27,19 +27,17 @@ public class ConstructionSite {
 
     private LocalDate endDate;
 
-    // 👑 MANAGER (Many sites → one manager)
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private User manager;
 
-    // 👷 WORKERS (many-to-many)
     @ManyToMany
     @JoinTable(
             name = "site_workers",
             joinColumns = @JoinColumn(name = "site_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> workers = new HashSet<>();
+//    private Set<User> workers = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -105,11 +103,11 @@ public class ConstructionSite {
         this.manager = manager;
     }
 
-    public Set<User> getWorkers() {
-        return workers;
-    }
-
-    public void setWorkers(Set<User> workers) {
-        this.workers = workers;
-    }
+//    public Set<User> getWorkers() {
+//        return workers;
+//    }
+//
+//    public void setWorkers(Set<User> workers) {
+//        this.workers = workers;
+//    }
 }

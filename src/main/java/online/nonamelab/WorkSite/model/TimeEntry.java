@@ -17,10 +17,6 @@ public class TimeEntry
 
     private LocalDate date;
 
-//    private double hours;
-
-//    private double distance;
-
     @Enumerated(EnumType.STRING)
     private TimeEntryStatus status;
 
@@ -33,16 +29,12 @@ public class TimeEntry
     private User user;
 
     @OneToMany(mappedBy = "timeEntry", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TimeEntrySite> projects = new ArrayList<>();
+    private List<TimeEntrySite> sites = new ArrayList<>();
 
 
     public Long getId() {
         return id;
     }
-
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
 
     public LocalDate getDate() {
         return date;
@@ -51,22 +43,6 @@ public class TimeEntry
     public void setDate(LocalDate date) {
         this.date = date;
     }
-
-//    public double getHours() {
-//        return hours;
-//    }
-//
-//    public void setHours(double hours) {
-//        this.hours = hours;
-//    }
-
-//    public double getDistance() {
-//        return distance;
-//    }
-//
-//    public void setDistance(double distance) {
-//        this.distance = distance;
-//    }
 
     public TimeEntryStatus getStatus() {
         return status;
@@ -100,19 +76,12 @@ public class TimeEntry
         this.createdAt = createdAt;
     }
 
-    public List<TimeEntrySite> getProjects() {
-        return projects;
+    public List<TimeEntrySite> getSites() {
+        return sites;
     }
 
-    public void setProjects(List<TimeEntrySite> projects) {
-        this.projects = projects;
+    public void setSites(List<TimeEntrySite> sites) {
+        this.sites = sites;
     }
 
-//    public ConstructionSite getSite() {
-//        return site;
-//    }
-//
-//    public void setSite(ConstructionSite site) {
-//        this.site = site;
-//    }
 }

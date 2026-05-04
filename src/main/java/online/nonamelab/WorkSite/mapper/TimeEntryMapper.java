@@ -29,7 +29,7 @@ public class TimeEntryMapper {
                 entry.isLocked(),
                 entry.getUser().getId(),
 //                entry.getSite().getId()
-                entry.getProjects().stream()
+                entry.getSites().stream()
                         .map(TimeEntrySiteMapper::toResponse)
                         .toList()
         );

@@ -5,10 +5,10 @@ import online.nonamelab.WorkSite.timeentry.dto.TimeEntryResponse;
 import online.nonamelab.WorkSite.timeentry.service.TimeEntryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @PreAuthorize("hasAnyRole('WORKER','MANAGER')")
 @RestController
@@ -28,7 +28,30 @@ public class TimeEntryController {
 
         TimeEntryResponse response = timeEntryService.createOrGet(request);
 
-
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
+    public ResponseEntity<List<TimeEntryResponse>> getMyEntries(
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to
+    ) {
+
+        return ResponseEntity.ok(
+                timeEntryService.getMyEntries(from, to)
+        );
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TimeEntryResponse>> getByUserAndMonth(
+            @PathVariable Long userId,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month
+    ) {
+        return ResponseEntity.ok(
+                timeEntryService.getByUserAndMonth(userId, year, month)
+        );
     }
 }

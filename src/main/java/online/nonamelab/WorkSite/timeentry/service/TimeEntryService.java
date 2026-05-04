@@ -10,7 +10,9 @@ public interface TimeEntryService {
 
     TimeEntryResponse createOrGet(CreateTimeEntryRequest request);
 
-    List<TimeEntryResponse> getMyEntries();
+    List<TimeEntryResponse> getMyEntries(LocalDate from, LocalDate to);
+
+    List<TimeEntryResponse> getByUserAndMonth(Long userId, Integer year, Integer month);
 
     TimeEntryResponse getByDate(LocalDate date);
 
