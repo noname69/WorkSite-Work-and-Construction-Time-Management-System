@@ -1,11 +1,11 @@
 package online.nonamelab.WorkSite.auth.service;
 
-import online.nonamelab.WorkSite.user.dto.AuthResponse;
-import online.nonamelab.WorkSite.user.dto.LoginRequest;
 import online.nonamelab.WorkSite.exception.InvalidCredentialsException;
 import online.nonamelab.WorkSite.model.User;
-import online.nonamelab.WorkSite.user.repository.UserRepository;
 import online.nonamelab.WorkSite.security.JwtService;
+import online.nonamelab.WorkSite.user.dto.AuthResponse;
+import online.nonamelab.WorkSite.user.dto.LoginRequest;
+import online.nonamelab.WorkSite.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

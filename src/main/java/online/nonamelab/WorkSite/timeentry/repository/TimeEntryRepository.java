@@ -21,23 +21,19 @@ public interface TimeEntryRepository extends JpaRepository<TimeEntry, Long> {
 //            LocalDate start,
 //            LocalDate end
 //    );
-    // find entry for specific user and day (VERY IMPORTANT)
     Optional<TimeEntry> findByUser_IdAndDate(Long userId, LocalDate date);
 
-    // all entries of a user
-    List<TimeEntry> findByUser_Id(Long userId);
+//    List<TimeEntry> findByUser_Id(Long userId);
+//
+//    List<TimeEntry> findByUser_IdAndDateBetween(
+//            Long userId,
+//            LocalDate start,
+//            LocalDate end
+//    );
 
-    // entries in date range (useful for reports)
-    List<TimeEntry> findByUser_IdAndDateBetween(
-            Long userId,
-            LocalDate start,
-            LocalDate end
-    );
-
-    // manager/admin: all entries for a day
-    List<TimeEntry> findByDate(LocalDate date);
-
-    List<TimeEntry> findAllByUser_IdOrderByDateDesc(Long userId);
+//    List<TimeEntry> findByDate(LocalDate date);
+//
+//    List<TimeEntry> findAllByUser_IdOrderByDateDesc(Long userId);
 
     List<TimeEntry> findAllByUser_IdAndDateBetweenOrderByDateDesc(
             Long userId,

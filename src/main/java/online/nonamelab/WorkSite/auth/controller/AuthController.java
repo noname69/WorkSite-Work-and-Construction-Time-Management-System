@@ -1,9 +1,9 @@
 package online.nonamelab.WorkSite.auth.controller;
 
 import jakarta.validation.Valid;
+import online.nonamelab.WorkSite.auth.service.AuthService;
 import online.nonamelab.WorkSite.user.dto.AuthResponse;
 import online.nonamelab.WorkSite.user.dto.LoginRequest;
-import online.nonamelab.WorkSite.auth.service.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

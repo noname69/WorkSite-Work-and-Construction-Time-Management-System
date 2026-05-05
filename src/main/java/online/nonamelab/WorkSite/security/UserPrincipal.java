@@ -24,6 +24,13 @@ public class UserPrincipal implements UserDetails {
         this.role = user.getRole();
     }
 
+    public UserPrincipal(Long id, Role role) {
+        this.id = id;
+        this.email = null;
+        this.password = null;
+        this.role = role;
+    }
+
     public Long getId() {
         return id;
     }

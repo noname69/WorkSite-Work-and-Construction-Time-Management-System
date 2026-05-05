@@ -12,6 +12,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -134,7 +135,7 @@ public class GlobalExceptionHandler {
 
         Throwable rootCause = ex.getMostSpecificCause();
 
-        String message = "Invalid request body";
+        String message = "Invalid field value";
 
         if (rootCause != null) {
             message = rootCause.getMessage();
@@ -154,6 +155,34 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 LocalDateTime.now(),
                 errors
+        );
+
+        return ResponseEntity.badRequest().body(apiError);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ValidationError> handleTypeMismatch(
+            MethodArgumentTypeMismatchException ex,
+            HttpServletRequest request) {
+
+        String field = ex.getName();
+        Object value = ex.getValue();
+
+        String message = "Invalid value";
+
+        if (value != null) {
+            message = "Invalid value: " + value;
+        }
+
+        ApiFieldError error = new ApiFieldError(field, message);
+
+        ValidationError apiError = new ValidationError(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Parameter validation failed",
+                request.getRequestURI(),
+                LocalDateTime.now(),
+                List.of(error)
         );
 
         return ResponseEntity.badRequest().body(apiError);

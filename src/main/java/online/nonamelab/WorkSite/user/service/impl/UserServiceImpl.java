@@ -5,14 +5,14 @@ import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
 import online.nonamelab.WorkSite.mapper.UserMapper;
 import online.nonamelab.WorkSite.model.Role;
 import online.nonamelab.WorkSite.model.User;
-import online.nonamelab.WorkSite.user.repository.UserRepository;
 import online.nonamelab.WorkSite.security.SecurityUtils;
 import online.nonamelab.WorkSite.security.UserPrincipal;
-import online.nonamelab.WorkSite.user.dto.UpdateMeRequest;
-import online.nonamelab.WorkSite.user.service.UserService;
 import online.nonamelab.WorkSite.user.dto.CreateUserRequest;
+import online.nonamelab.WorkSite.user.dto.UpdateMeRequest;
 import online.nonamelab.WorkSite.user.dto.UpdateUserRequest;
 import online.nonamelab.WorkSite.user.dto.UserResponse;
+import online.nonamelab.WorkSite.user.repository.UserRepository;
+import online.nonamelab.WorkSite.user.service.UserService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -138,6 +138,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        userRepository.delete(user);
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 }

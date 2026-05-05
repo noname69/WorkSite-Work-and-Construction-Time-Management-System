@@ -1,6 +1,9 @@
 package online.nonamelab.WorkSite.user.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import online.nonamelab.WorkSite.model.Role;
 
 public record CreateUserRequest(

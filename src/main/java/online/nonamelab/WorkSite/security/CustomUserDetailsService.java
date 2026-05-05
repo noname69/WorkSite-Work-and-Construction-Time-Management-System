@@ -27,6 +27,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                         new UsernameNotFoundException(email)
                 );
 
+        if (user.isDeleted()) {
+            throw new UsernameNotFoundException("User is deleted");
+        }
+
         return new UserPrincipal(user);
     }
 }

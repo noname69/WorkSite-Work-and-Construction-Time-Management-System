@@ -1,13 +1,11 @@
 package online.nonamelab.WorkSite.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import online.nonamelab.WorkSite.model.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -35,26 +33,30 @@ public class JwtService {
                 .compact();
     }
 
-    public String extractEmail(String token) {
-        return getClaims(token).getSubject();
-    }
+//    public String extractEmail(String token) {
+//        return getClaims(token).getSubject();
+//    }
 
     public String extractRole(String token) {
         return getClaims(token).get("role", String.class);
     }
 
-    public String extractSubject(String token) {
-        return getClaims(token).getSubject();
+    public Long extractUserId(String token) {
+        return Long.valueOf(getClaims(token).getSubject());
     }
 
-    public boolean isValid(String token, UserPrincipal userPrincipal) {
-        String userId = extractSubject(token);
-        return userId.equals(userPrincipal.getId().toString()) && !isTokenExpired(token);
+//    public String extractSubject(String token) {
+//        return getClaims(token).getSubject();
+//    }
 
-    }
-
-    private boolean isTokenExpired(String token) {
-        return getClaims(token).getExpiration().before(new Date());
+    public boolean isTokenValid(String token) {
+        try {
+            return !getClaims(token)
+                    .getExpiration()
+                    .before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private Claims getClaims(String token) {

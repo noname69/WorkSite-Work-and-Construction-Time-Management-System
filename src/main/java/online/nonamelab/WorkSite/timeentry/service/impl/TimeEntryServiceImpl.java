@@ -1,27 +1,25 @@
 package online.nonamelab.WorkSite.timeentry.service.impl;
 
 import jakarta.transaction.Transactional;
-import online.nonamelab.WorkSite.model.*;
-import online.nonamelab.WorkSite.timeentry.dto.CreateTimeEntrySiteRequest;
-import online.nonamelab.WorkSite.timeentry.dto.CreateTimeEntryRequest;
-import online.nonamelab.WorkSite.mapper.TimeEntryMapper;
-import online.nonamelab.WorkSite.timeentry.dto.TimeEntryResponse;
+import online.nonamelab.WorkSite.constructionsite.repository.ConstructionSiteRepository;
 import online.nonamelab.WorkSite.exception.BusinessException;
 import online.nonamelab.WorkSite.exception.site.SiteNotFoundException;
-import online.nonamelab.WorkSite.constructionsite.repository.ConstructionSiteRepository;
-import online.nonamelab.WorkSite.timeentry.repository.TimeEntrySiteRepository;
-import online.nonamelab.WorkSite.timeentry.repository.TimeEntryRepository;
-import online.nonamelab.WorkSite.user.repository.UserRepository;
+import online.nonamelab.WorkSite.mapper.TimeEntryMapper;
+import online.nonamelab.WorkSite.model.*;
 import online.nonamelab.WorkSite.security.SecurityUtils;
 import online.nonamelab.WorkSite.security.UserPrincipal;
+import online.nonamelab.WorkSite.timeentry.dto.CreateTimeEntryRequest;
+import online.nonamelab.WorkSite.timeentry.dto.CreateTimeEntrySiteRequest;
+import online.nonamelab.WorkSite.timeentry.dto.TimeEntryResponse;
+import online.nonamelab.WorkSite.timeentry.repository.TimeEntryRepository;
+import online.nonamelab.WorkSite.timeentry.repository.TimeEntrySiteRepository;
 import online.nonamelab.WorkSite.timeentry.service.TimeEntryService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import online.nonamelab.WorkSite.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TimeEntryServiceImpl implements TimeEntryService {

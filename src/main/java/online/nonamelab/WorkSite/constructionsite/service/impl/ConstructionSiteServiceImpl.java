@@ -1,18 +1,17 @@
 package online.nonamelab.WorkSite.constructionsite.service.impl;
 
 import online.nonamelab.WorkSite.constructionsite.dto.CreateSiteRequest;
-import online.nonamelab.WorkSite.constructionsite.service.ConstructionSiteService;
-import online.nonamelab.WorkSite.exception.user.ManagerNotFoundException;
-import online.nonamelab.WorkSite.mapper.SiteMapper;
 import online.nonamelab.WorkSite.constructionsite.dto.SiteResponse;
 import online.nonamelab.WorkSite.constructionsite.dto.UpdateSiteRequest;
-import online.nonamelab.WorkSite.exception.user.InvalidRoleException;
+import online.nonamelab.WorkSite.constructionsite.repository.ConstructionSiteRepository;
+import online.nonamelab.WorkSite.constructionsite.service.ConstructionSiteService;
 import online.nonamelab.WorkSite.exception.site.SiteNotFoundException;
-import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
+import online.nonamelab.WorkSite.exception.user.InvalidRoleException;
+import online.nonamelab.WorkSite.exception.user.ManagerNotFoundException;
+import online.nonamelab.WorkSite.mapper.SiteMapper;
 import online.nonamelab.WorkSite.model.ConstructionSite;
 import online.nonamelab.WorkSite.model.Role;
 import online.nonamelab.WorkSite.model.User;
-import online.nonamelab.WorkSite.constructionsite.repository.ConstructionSiteRepository;
 import online.nonamelab.WorkSite.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -75,9 +74,6 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
             site.setManager(manager);
         }
 
-        // =========================
-        // PATCH FIELD UPDATES
-        // =========================
         if (request.name() != null) {
             site.setName(request.name());
         }

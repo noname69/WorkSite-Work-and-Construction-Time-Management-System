@@ -3,8 +3,6 @@ package online.nonamelab.WorkSite.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "construction_site")
@@ -37,7 +35,6 @@ public class ConstructionSite {
             joinColumns = @JoinColumn(name = "site_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-//    private Set<User> workers = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -102,12 +99,4 @@ public class ConstructionSite {
     public void setManager(User manager) {
         this.manager = manager;
     }
-
-//    public Set<User> getWorkers() {
-//        return workers;
-//    }
-//
-//    public void setWorkers(Set<User> workers) {
-//        this.workers = workers;
-//    }
 }

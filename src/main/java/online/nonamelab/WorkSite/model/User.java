@@ -20,6 +20,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private boolean deleted = false;
+
     public Long getId() {
         return id;
     }
@@ -58,5 +60,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
