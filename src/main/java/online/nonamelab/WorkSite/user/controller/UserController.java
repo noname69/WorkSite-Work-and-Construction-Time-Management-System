@@ -40,11 +40,13 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
+//  @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @GetMapping("/{id}")
     public UserResponse getById(@PathVariable Long id) {
         return userService.getById(id);
     }
 
+    // create User
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserResponse> create(
@@ -55,7 +57,8 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
+    // update User
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PatchMapping("/{id}")
     public UserResponse update(
             @PathVariable long id,
@@ -84,6 +87,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // update ME
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
     @PatchMapping("/me")
     public UserResponse updateMe(@RequestBody @Valid UpdateMeRequest request) {

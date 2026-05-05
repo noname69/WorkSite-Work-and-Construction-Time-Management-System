@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 
 public record UserResponse(
         Long id,
-        String name,
-//        String firstName,
-//        String lastName,
+//        String name,
+        String firstName,
+        String lastName,
 
         String email,
-//        String phoneNumber,
+        String phoneNumber,
 
         Role role
 
