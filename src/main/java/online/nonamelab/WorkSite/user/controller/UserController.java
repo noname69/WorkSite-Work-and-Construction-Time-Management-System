@@ -69,6 +69,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/restore")
+    public ResponseEntity<Void> restore(@PathVariable Long id) {
+        userService.restore(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
     @PatchMapping("/me")
     public UserResponse updateMe(@RequestBody @Valid UpdateMeRequest request) {

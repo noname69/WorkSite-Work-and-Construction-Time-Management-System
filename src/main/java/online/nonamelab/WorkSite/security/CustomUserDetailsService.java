@@ -1,6 +1,6 @@
 package online.nonamelab.WorkSite.security;
 
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.user.model.User;
 import online.nonamelab.WorkSite.user.repository.UserRepository;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,7 +1,7 @@
 package online.nonamelab.WorkSite.auth.service;
 
-import online.nonamelab.WorkSite.exception.InvalidCredentialsException;
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.exception.user.InvalidCredentialsException;
+import online.nonamelab.WorkSite.user.model.User;
 import online.nonamelab.WorkSite.security.JwtService;
 import online.nonamelab.WorkSite.user.dto.AuthResponse;
 import online.nonamelab.WorkSite.user.dto.LoginRequest;

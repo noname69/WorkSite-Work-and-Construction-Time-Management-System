@@ -1,6 +1,6 @@
 package online.nonamelab.WorkSite.constructionsite.repository;
 
-import online.nonamelab.WorkSite.model.ConstructionSite;
+import online.nonamelab.WorkSite.constructionsite.model.ConstructionSite;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

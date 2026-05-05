@@ -1,7 +1,7 @@
 package online.nonamelab.WorkSite.user;
 
 import online.nonamelab.WorkSite.model.Role;
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.user.model.User;
 import online.nonamelab.WorkSite.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

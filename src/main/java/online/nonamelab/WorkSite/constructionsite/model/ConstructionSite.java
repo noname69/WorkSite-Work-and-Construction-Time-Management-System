@@ -1,6 +1,9 @@
-package online.nonamelab.WorkSite.model;
+package online.nonamelab.WorkSite.constructionsite.model;
 
 import jakarta.persistence.*;
+import online.nonamelab.WorkSite.model.Priority;
+import online.nonamelab.WorkSite.model.SiteStatus;
+import online.nonamelab.WorkSite.user.model.User;
 
 import java.time.LocalDate;
 

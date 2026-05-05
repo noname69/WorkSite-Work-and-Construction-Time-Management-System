@@ -1,10 +1,12 @@
 package online.nonamelab.WorkSite.user.service.impl;
 
+import jakarta.transaction.Transactional;
+import online.nonamelab.WorkSite.exception.BusinessException;
 import online.nonamelab.WorkSite.exception.user.DuplicateEmailException;
 import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
-import online.nonamelab.WorkSite.mapper.UserMapper;
+import online.nonamelab.WorkSite.user.mapper.UserMapper;
 import online.nonamelab.WorkSite.model.Role;
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.user.model.User;
 import online.nonamelab.WorkSite.security.SecurityUtils;
 import online.nonamelab.WorkSite.security.UserPrincipal;
 import online.nonamelab.WorkSite.user.dto.CreateUserRequest;
@@ -133,12 +135,35 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(userRepository.save(user));
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
+        UserPrincipal currentUser = securityUtils.getCurrentUser();
+
+        if (currentUser.getId().equals(id)) {
+            throw new BusinessException("You cannot delete yourself");
+        }
+
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
+        if (user.isDeleted()) {
+            throw new BusinessException("User already deleted");
+        }
+
         user.setDeleted(true);
-        userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void restore(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (!user.isDeleted()) {
+            throw new BusinessException("User is not deleted");
+        }
+
+        user.setDeleted(false);
     }
 }

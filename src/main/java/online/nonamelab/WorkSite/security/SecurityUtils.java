@@ -1,6 +1,6 @@
 package online.nonamelab.WorkSite.security;
 
-import online.nonamelab.WorkSite.exception.InvalidCredentialsException;
+import online.nonamelab.WorkSite.exception.user.InvalidCredentialsException;
 import online.nonamelab.WorkSite.model.Role;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

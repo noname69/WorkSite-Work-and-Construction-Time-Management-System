@@ -1,6 +1,7 @@
-package online.nonamelab.WorkSite.model;
+package online.nonamelab.WorkSite.timeentry.model;
 
 import jakarta.persistence.*;
+import online.nonamelab.WorkSite.constructionsite.model.ConstructionSite;
 
 @Entity
 @Table(name = "time_entry_projects")

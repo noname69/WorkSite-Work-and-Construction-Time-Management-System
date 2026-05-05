@@ -1,6 +1,6 @@
 package online.nonamelab.WorkSite.user.repository;
 
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

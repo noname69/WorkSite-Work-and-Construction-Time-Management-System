@@ -23,4 +23,6 @@ public interface UserService {
 
     void delete(Long id);
 
+    void restore(Long id);
+
 }

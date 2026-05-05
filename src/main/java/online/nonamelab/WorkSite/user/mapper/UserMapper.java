@@ -1,6 +1,6 @@
-package online.nonamelab.WorkSite.mapper;
+package online.nonamelab.WorkSite.user.mapper;
 
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.user.model.User;
 import online.nonamelab.WorkSite.user.dto.CreateUserRequest;
 import online.nonamelab.WorkSite.user.dto.UpdateUserRequest;
 import online.nonamelab.WorkSite.user.dto.UserResponse;

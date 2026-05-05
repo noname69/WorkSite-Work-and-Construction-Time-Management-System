@@ -8,10 +8,10 @@ import online.nonamelab.WorkSite.constructionsite.service.ConstructionSiteServic
 import online.nonamelab.WorkSite.exception.site.SiteNotFoundException;
 import online.nonamelab.WorkSite.exception.user.InvalidRoleException;
 import online.nonamelab.WorkSite.exception.user.ManagerNotFoundException;
-import online.nonamelab.WorkSite.mapper.SiteMapper;
-import online.nonamelab.WorkSite.model.ConstructionSite;
+import online.nonamelab.WorkSite.constructionsite.mapper.SiteMapper;
+import online.nonamelab.WorkSite.constructionsite.model.ConstructionSite;
 import online.nonamelab.WorkSite.model.Role;
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.user.model.User;
 import online.nonamelab.WorkSite.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 

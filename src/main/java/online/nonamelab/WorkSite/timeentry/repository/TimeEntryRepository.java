@@ -1,6 +1,6 @@
 package online.nonamelab.WorkSite.timeentry.repository;
 
-import online.nonamelab.WorkSite.model.TimeEntry;
+import online.nonamelab.WorkSite.timeentry.model.TimeEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

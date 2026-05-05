@@ -1,6 +1,7 @@
-package online.nonamelab.WorkSite.model;
+package online.nonamelab.WorkSite.user.model;
 
 import jakarta.persistence.*;
+import online.nonamelab.WorkSite.model.Role;
 
 @Entity
 @Table(name = "app_users")

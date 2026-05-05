@@ -1,9 +1,9 @@
-package online.nonamelab.WorkSite.mapper;
+package online.nonamelab.WorkSite.constructionsite.mapper;
 
 import online.nonamelab.WorkSite.constructionsite.dto.CreateSiteRequest;
 import online.nonamelab.WorkSite.constructionsite.dto.SiteResponse;
-import online.nonamelab.WorkSite.model.ConstructionSite;
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.constructionsite.model.ConstructionSite;
+import online.nonamelab.WorkSite.user.model.User;
 
 import java.util.List;
 

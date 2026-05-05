@@ -1,7 +1,7 @@
 package online.nonamelab.WorkSite.security;
 
 import online.nonamelab.WorkSite.model.Role;
-import online.nonamelab.WorkSite.model.User;
+import online.nonamelab.WorkSite.user.model.User;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

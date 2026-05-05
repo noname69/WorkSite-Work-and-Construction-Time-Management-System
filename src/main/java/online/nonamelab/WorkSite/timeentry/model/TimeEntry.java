@@ -1,6 +1,8 @@
-package online.nonamelab.WorkSite.model;
+package online.nonamelab.WorkSite.timeentry.model;
 
 import jakarta.persistence.*;
+import online.nonamelab.WorkSite.model.TimeEntryStatus;
+import online.nonamelab.WorkSite.user.model.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

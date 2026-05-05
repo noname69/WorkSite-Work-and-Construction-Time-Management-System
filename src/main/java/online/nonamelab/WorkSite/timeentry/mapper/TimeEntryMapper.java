@@ -1,6 +1,6 @@
-package online.nonamelab.WorkSite.mapper;
+package online.nonamelab.WorkSite.timeentry.mapper;
 
-import online.nonamelab.WorkSite.model.TimeEntry;
+import online.nonamelab.WorkSite.timeentry.model.TimeEntry;
 import online.nonamelab.WorkSite.timeentry.dto.CreateTimeEntryRequest;
 import online.nonamelab.WorkSite.timeentry.dto.TimeEntryResponse;
 
