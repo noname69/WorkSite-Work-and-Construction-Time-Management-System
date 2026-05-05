@@ -12,9 +12,12 @@ public class UserMapper {
     public static User toUser(CreateUserRequest request) {
         User user = new User();
         user.setName(request.name());
+//        user.setFirstName(request.firstName());
+//        user.setLastName(request.lastName());
         user.setEmail(request.email());
         user.setPassword(request.password());
         user.setRole(request.role());
+//        user.setPhoneNumber(request.phoneNumber());
         return user;
     }
 
@@ -23,8 +26,11 @@ public class UserMapper {
         User user = new User();
         user.setId(user.getId());
         user.setName(request.name());
+//        user.setFirstName(request.firstName());
+//        user.setLastName(request.lastName());
         user.setEmail(request.email());
         user.setRole(request.role());
+//        user.setPhoneNumber(request.phoneNumber());
         return user;
     }
 
@@ -33,6 +39,7 @@ public class UserMapper {
         return new UserResponse(
                 user.getId(),
                 user.getName(),
+//                user.getFirstName() + " " + user.getLastName(),
                 user.getEmail(),
                 user.getRole()
         );

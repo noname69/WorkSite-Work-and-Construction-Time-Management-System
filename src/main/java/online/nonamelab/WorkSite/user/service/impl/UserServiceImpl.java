@@ -4,17 +4,18 @@ import jakarta.transaction.Transactional;
 import online.nonamelab.WorkSite.exception.BusinessException;
 import online.nonamelab.WorkSite.exception.user.DuplicateEmailException;
 import online.nonamelab.WorkSite.exception.user.UserNotFoundException;
+import online.nonamelab.WorkSite.user.dto.*;
 import online.nonamelab.WorkSite.user.mapper.UserMapper;
 import online.nonamelab.WorkSite.model.Role;
 import online.nonamelab.WorkSite.user.model.User;
 import online.nonamelab.WorkSite.security.SecurityUtils;
 import online.nonamelab.WorkSite.security.UserPrincipal;
-import online.nonamelab.WorkSite.user.dto.CreateUserRequest;
-import online.nonamelab.WorkSite.user.dto.UpdateMeRequest;
-import online.nonamelab.WorkSite.user.dto.UpdateUserRequest;
-import online.nonamelab.WorkSite.user.dto.UserResponse;
 import online.nonamelab.WorkSite.user.repository.UserRepository;
 import online.nonamelab.WorkSite.user.service.UserService;
+import online.nonamelab.WorkSite.user.specifications.UserSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,17 +37,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> getAll() {
+    public Page<UserResponse> getAll(UserFilter filter, Pageable pageable) {
         UserPrincipal current = securityUtils.getCurrentUser();
 
-        List<User> users = userRepository.findAll();
+        if (current.getRole() != Role.ADMIN) {
+            filter.setRole(Role.WORKER); // example restriction OR adjust logic
+            filter.setDeleted(false);
+        }
 
-        List<User> filtered = users.stream()
-                .filter(user -> current.getRole() == Role.ADMIN
-                        || user.getRole() != Role.ADMIN)
-                .toList();
+        Specification<User> spec = UserSpecification.filter(filter);
 
-        return UserMapper.toResponseList(filtered);
+        return userRepository.findAll(spec, pageable)
+                .map(UserMapper::toResponse);
     }
 
     @Override
@@ -65,6 +67,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(user);
     }
 
+    // get info about ME
     public UserResponse getMe() {
         UserPrincipal currentUser = securityUtils.getCurrentUser();
 
@@ -74,6 +77,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(user);
     }
 
+    // create USER
     @Override
     public UserResponse create(CreateUserRequest request) {
         if(userRepository.existsByEmail(request.email())) {
@@ -86,6 +90,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(userRepository.save(user));
     }
 
+    // update ME
     @Override
     public UserResponse updateMe(UpdateMeRequest request) {
         UserPrincipal currentUser = securityUtils.getCurrentUser();

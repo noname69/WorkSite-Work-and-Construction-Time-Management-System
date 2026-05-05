@@ -1,10 +1,18 @@
 package online.nonamelab.WorkSite.user.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import online.nonamelab.WorkSite.model.Role;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "app_users")
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -12,6 +20,11 @@ public class User {
     private Long id;
 
     private String name;
+
+    private String firstName;
+    private String lastName;
+
+    private String phoneNumber;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -23,51 +36,24 @@ public class User {
 
     private boolean deleted = false;
 
-    public Long getId() {
-        return id;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    private LocalDateTime lastLoginAt;
+
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
 }

@@ -1,11 +1,11 @@
 package online.nonamelab.WorkSite.user.controller;
 
 import jakarta.validation.Valid;
-import online.nonamelab.WorkSite.user.dto.CreateUserRequest;
-import online.nonamelab.WorkSite.user.dto.UpdateMeRequest;
-import online.nonamelab.WorkSite.user.dto.UpdateUserRequest;
-import online.nonamelab.WorkSite.user.dto.UserResponse;
+import online.nonamelab.WorkSite.model.Role;
+import online.nonamelab.WorkSite.user.dto.*;
 import online.nonamelab.WorkSite.user.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,8 +25,18 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
     @GetMapping
-    public List<UserResponse> getAll() {
-        return userService.getAll();
+    public Page<UserResponse> getAll(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Role role,
+            @RequestParam(required = false) Boolean deleted,
+            Pageable pageable
+    ) {
+        UserFilter filter = new UserFilter();
+        filter.setSearch(search);
+        filter.setRole(role);
+        filter.setDeleted(deleted);
+
+        return userService.getAll(filter, pageable);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
@@ -46,7 +56,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public UserResponse update(
             @PathVariable long id,
             @RequestBody @Valid UpdateUserRequest request
@@ -57,8 +67,6 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
     @GetMapping("/me")
     public UserResponse getMe() {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-
         return userService.getMe();
     }
 

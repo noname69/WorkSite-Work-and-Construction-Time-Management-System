@@ -31,8 +31,8 @@ public class TimeEntryController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/my")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','WORKER')")
+    @GetMapping("/my")
     public ResponseEntity<List<TimeEntryResponse>> getMyEntries(
             @RequestParam(required = false) LocalDate from,
             @RequestParam(required = false) LocalDate to

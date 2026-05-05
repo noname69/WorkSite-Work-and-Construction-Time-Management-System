@@ -9,6 +9,8 @@ import online.nonamelab.WorkSite.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class AuthService {
 
@@ -30,6 +32,10 @@ public class AuthService {
         if(!encoder.matches(request.password(), user.getPassword())) {
             throw  new InvalidCredentialsException();
         }
+
+        // last login
+        user.setLastLoginAt(LocalDateTime.now());
+        userRepository.save(user);
 
         String token = jwtService.generateToken(user);
 
