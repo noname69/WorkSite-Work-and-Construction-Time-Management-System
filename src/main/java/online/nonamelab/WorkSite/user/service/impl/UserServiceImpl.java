@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         UserPrincipal current = securityUtils.getCurrentUser();
 
         if (current.getRole() != Role.ADMIN) {
-            filter.setRole(Role.WORKER); // example restriction OR adjust logic
+            filter.setRole(Role.WORKER);
             filter.setDeleted(false);
         }
 
@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
                 .map(UserMapper::toResponse);
     }
 
+    // get User by ID
     @Override
     public UserResponse getById(Long id) {
 
@@ -102,20 +103,18 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateEmailException(request.email());
         }
 
-        user.setName(request.name());
+
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
         user.setEmail(request.email());
+        user.setPhoneNumber(request.phoneNumber());
 
         return UserMapper.toResponse(userRepository.save(user));
     }
 
+    // update User
     @Override
     public UserResponse update(Long id, UpdateUserRequest request) {
-
-        UserPrincipal currentUser = securityUtils.getCurrentUser();
-
-        if (currentUser.getRole() != Role.ADMIN) {
-            throw new AccessDeniedException("Only ADMIN can update users");
-        }
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -125,21 +124,12 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateEmailException(request.email());
         }
 
-        if (request.name() != null) {
-            user.setName(request.name());
-        }
-
-        if (request.email() != null) {
-            user.setEmail(request.email());
-        }
-
-        if (request.role() != null) {
-            user.setRole(request.role());
-        }
+        UserMapper.updateUser(user, request);
 
         return UserMapper.toResponse(userRepository.save(user));
     }
 
+    // soft delete User
     @Transactional
     @Override
     public void delete(Long id) {
@@ -159,6 +149,7 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(true);
     }
 
+    // restore User if soft deleted
     @Transactional
     @Override
     public void restore(Long id) {
